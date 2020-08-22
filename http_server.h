@@ -51,6 +51,8 @@ void http_start_setup(byte *mac, int mac_size, byte *ip)
 
 void http_server_loop(int *led_pins, int led_pins_size, boolean *pins_status, int pins_status_eeAddress)
 {
+    delay(1);
+  
     word packet_len = ether.packetReceive();
     word pos = ether.packetLoop(packet_len);
 

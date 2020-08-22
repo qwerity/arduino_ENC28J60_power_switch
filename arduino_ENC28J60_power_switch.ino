@@ -1,4 +1,6 @@
-#include "http_server.h"
+// #include "http_server.h"
+#include "snmp_agent.h"
+#include <EEPROM.h>
 
 int pins_status_eeAddress = 0;
 
@@ -13,7 +15,8 @@ void setup()
 {
     Serial.begin(9600);
 
-    http_start_setup(_mac, 10, _ip);
+    //http_start_setup(_mac, 10, _ip);
+    snmp_agent_setup(_mac, _ip);
 
     //Get the pins statuses from the EEPROM at position 'eeAddress'
     EEPROM.get(pins_status_eeAddress, pins_status);
@@ -32,7 +35,6 @@ void setup()
 
 void loop()
 {
-    delay(1);
-
-    http_server_loop(led_pins, led_pins_size, pins_status, pins_status_eeAddress);
+    //http_server_loop(led_pins, led_pins_size, pins_status, pins_status_eeAddress);
+    snmp_agent_loop();
 }
