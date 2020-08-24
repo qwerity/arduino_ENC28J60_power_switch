@@ -188,7 +188,13 @@ void pduReceived() {
                 pdu.type = SNMP_PDU_RESPONSE;
                 pdu.error = status;
 
-                setPinsStatus(locLedPinsStatus, true);
+                if (locLedPinsStatus > 7) {
+                    pdu.error = SNMP_ERR_WRONG_VALUE;
+                }
+
+                if (SNMP_ERR_NO_ERROR == pdu.error) {
+                    setPinsStatus(locLedPinsStatus, true);
+                }
             } else {
                 // response packet from get-request - locLocation
                 status = pdu.VALUE.encode(SNMP_SYNTAX_UINT32, locLedPinsStatus);
@@ -209,13 +215,13 @@ void pduReceived() {
 // setup
 void setup()
 {
-    Serial.begin(9600);
     Ethernet.begin(mac, ip);
 
     //Get the pins statuses from the EEPROM at position 'eeAddress'
     EEPROM.get(pinsStatusEEAddress, locLedPinsStatus);
-    Serial.print("pins status: ");
-    Serial.println(locLedPinsStatus);
+//    Serial.begin(9600);
+//    Serial.print("pins status: ");
+//    Serial.println(locLedPinsStatus);
 
     preparePins();
     setPinsStatus(locLedPinsStatus);
